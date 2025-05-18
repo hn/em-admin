@@ -87,11 +87,13 @@
 
 #define EM_HOUR(h)		(1 << (h))
 
-#define EM_OMSMODE_C1		0x03		/* unsure, may be bitfield */
-#define EM_OMSMODE_T1		0x01
+#define EM_OMSMODE_T1_OMS3_ENC5	1
+#define EM_OMSMODE_C1_OMS3_ENC5	3
+#define EM_OMSMODE_T1_OMS4_ENC7	17
+#define EM_OMSMODE_C1_OMS4_ENC7	19
 
-#define EM_FRAME_LONG		0x12		/* unsure, may be bitfield */
-#define EM_FRAME_SHORT		0x11
+#define EM_FRAME_SHORT		17
+#define EM_FRAME_LONG		18
 
 #define MBUS_WAKEUP_CHAR	0x55
 #define MBUS_FRAME_ACK		0xE5
@@ -137,8 +139,8 @@
 #define EM_SET_ONVOL		1000		/* only used if EM_ENA_STARTVOL is set */
 
 #define EM_SET_OPYEARS		10
-#define EM_SET_OMSMODE		EM_OMSMODE_C1
-#define EM_SET_FRAMELEN		EM_FRAME_LONG
+#define EM_SET_OMSMODE		EM_OMSMODE_C1_OMS3_ENC5
+#define EM_SET_FRAMETYPE		EM_FRAME_LONG
 
 #define EM_SET_KEYDAY_MONTH	10
 #define EM_SET_KEYDAY_DAY	3
@@ -564,8 +566,8 @@ int em_read_months(int fd) {
 void em_dump_settings(const unsigned char *data) {
 	unsigned char buf[32 + 1];
 	log_line(LOG_INFO, "EM_FLAGS: 0x%02x", data[0]);
-	log_line(LOG_INFO, "EM_OMSMODE: 0x%02x", data[1]);
-	log_line(LOG_INFO, "EM_FRAMELEN: 0x%02x", data[2]);
+	log_line(LOG_INFO, "EM_OMSMODE: %d", data[1]);
+	log_line(LOG_INFO, "EM_FRAMETYPE: %d", data[2]);
 	log_line(LOG_INFO, "EM_INTERVAL: %d s", (data[4] << 8 | data[3]));
 	log_line(LOG_INFO, "EM_MONTHS: 0b%s (Dec .. Jan)", bitprint(buf, data[6] << 8 | data[5], 12));
 	log_line(LOG_INFO, "EM_WEEKOMS: 0b%s (31 .. 1)",
@@ -626,7 +628,7 @@ int em_set_params(int fd) {
 		0x00, 0x00, 0x00, 0x00,		/* Unknown or reserved */
 		EM_SET_FLAGS,
 		EM_SET_OMSMODE,
-		EM_SET_FRAMELEN,
+		EM_SET_FRAMETYPE,
 		(EM_SET_INTERVAL >> 0) & 0xFF,
 		(EM_SET_INTERVAL >> 8) & 0xFF,
 		(EM_SET_MONTHS >> 0) & 0xFF,
