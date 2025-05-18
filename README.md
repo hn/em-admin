@@ -6,7 +6,7 @@ watermeter radio parameters and read various info via infrared M-Bus interface.
 
 This project is in no way affiliated with the above-mentioned vendors.
 
-Tested with water meters from the “M-ETH” “DWZ” series, other models may work.
+Tested with water meters from the WaterStar M “M-ETH” “DWZ” series, other models may work.
 Use at your own risk.
 
 ## Hardware
@@ -79,6 +79,8 @@ recompile and use `set_params`.
 :raised_hand: If you set the readout interval too low and also do not limit the hours and days,
 the battery will discharge before the end of the water meter's service life.
 Frequent reading via infrared likewise drains the battery.
+You can use the [Lorenz Web Configuration Tool](https://konfigurator.lorenz-meters.de/) to
+calculate expected battery lifetime.
 
 M-Bus timing and protocol parsing has been loosely implemented
 according to the specification and is “works for me” ware.
