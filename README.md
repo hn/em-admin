@@ -80,7 +80,7 @@ recompile and use `set_params`.
 the battery will discharge before the end of the water meter's service life.
 Frequent reading via infrared likewise drains the battery.
 You can use the [Lorenz Web Configuration Tool](https://konfigurator.lorenz-meters.de/) to
-calculate expected battery lifetime.
+calculate expected battery lifetime ([JS source code](https://konfigurator.lorenz-meters.de/battery.js)).
 
 M-Bus timing and protocol parsing has been loosely implemented
 according to the specification and is “works for me” ware.
