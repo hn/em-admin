@@ -566,15 +566,15 @@ void em_dump_settings(const unsigned char *data) {
 	log_line(LOG_INFO, "EM_FLAGS: 0x%02x", data[0]);
 	log_line(LOG_INFO, "EM_OMSMODE: 0x%02x", data[1]);
 	log_line(LOG_INFO, "EM_FRAMELEN: 0x%02x", data[2]);
-	log_line(LOG_INFO, "EM_INTERVAL: %d", (data[4] << 8 | data[3]));
-	log_line(LOG_INFO, "EM_MONTHS: 0b%s", bitprint(buf, data[6] << 8 | data[5], 12));
-	log_line(LOG_INFO, "EM_WEEKOMS: 0b%s",
+	log_line(LOG_INFO, "EM_INTERVAL: %d s", (data[4] << 8 | data[3]));
+	log_line(LOG_INFO, "EM_MONTHS: 0b%s (Dec .. Jan)", bitprint(buf, data[6] << 8 | data[5], 12));
+	log_line(LOG_INFO, "EM_WEEKOMS: 0b%s (31 .. 1)",
 		 bitprint(buf, data[10] << 24 | data[9] << 16 | data[8] << 8 | data[7], 31));
-	log_line(LOG_INFO, "EM_DAYOWS: 0b%s", bitprint(buf, data[11], 7));
-	log_line(LOG_INFO, "EM_HOURS: 0b%s", bitprint(buf, data[14] << 16 | data[13] << 8 | data[12], 24));
+	log_line(LOG_INFO, "EM_DAYOWS: 0b%s (Sun .. Mon)", bitprint(buf, data[11], 7));
+	log_line(LOG_INFO, "EM_HOURS: 0b%s (23 .. 00)", bitprint(buf, data[14] << 16 | data[13] << 8 | data[12], 24));
 	log_line(LOG_INFO, "EM_ONDAY: %04d-%02d-%02d", 2000 + ((data[16] & 0b11111110) >> 1),
 		 ((data[16] << 8 | data[15]) & 0b111100000) >> 5, data[15] & 0b11111);
-	log_line(LOG_INFO, "EM_ONVOL: %d", (data[18] << 8 | data[17]));
+	log_line(LOG_INFO, "EM_ONVOL: %d l", (data[18] << 8 | data[17]));
 	log_line(LOG_INFO, "EM_OPYEARS: %d", data[19]);
 }
 
