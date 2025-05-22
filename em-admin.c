@@ -95,6 +95,7 @@
 #define EM_FRAME_SHORT		17
 #define EM_FRAME_LONG		18
 
+#define MBUS_WAKEUP_TIME	3
 #define MBUS_WAKEUP_CHAR	0x55
 #define MBUS_FRAME_ACK		0xE5
 #define MBUS_FRAME_SHORT_START	0x10
@@ -140,12 +141,10 @@
 
 #define EM_SET_OPYEARS		10
 #define EM_SET_OMSMODE		EM_OMSMODE_C1_OMS3_ENC5
-#define EM_SET_FRAMETYPE		EM_FRAME_LONG
+#define EM_SET_FRAMETYPE	EM_FRAME_LONG
 
 #define EM_SET_KEYDAY_MONTH	10
 #define EM_SET_KEYDAY_DAY	3
-
-#define EM_WAKEUP_TIME		3
 
 
 void log_line(int prio, const char *fmt, ...) {
@@ -704,7 +703,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	mbus_wakeup(serial_fd);
-	sleep(EM_WAKEUP_TIME);
+	sleep(MBUS_WAKEUP_TIME);
 
 	log_line(LOG_INFO, "Setting serial port to 2400 baud 8E1");
 	err = serial_interface_attribs(serial_fd, B2400, PARENB);
