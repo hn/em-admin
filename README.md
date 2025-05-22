@@ -85,3 +85,9 @@ calculate expected battery lifetime ([JS source code](https://konfigurator.loren
 M-Bus timing and protocol parsing has been loosely implemented
 according to the specification and is “works for me” ware.
 
+## Supplementary
+
+To visualize the readings of the watermeter in Home Assistant, you can use this
+[ESPHome configuration](https://github.com/hn/esphome-configs/blob/master/watermeter-waterstarm/watermeter-waterstarm.yaml).
+Requires a [CC1101 receiver](https://www.ti.com/product/de-de/CC1101) wired to an ESP32
+(e.g. like [this](https://github.com/hn/esphome-configs/tree/master/watermeter-waterstarm/cc1101-esp32-c3.jpg)).
