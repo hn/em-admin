@@ -573,9 +573,11 @@ void em_dump_settings(const unsigned char *data) {
 		 bitprint(buf, data[10] << 24 | data[9] << 16 | data[8] << 8 | data[7], 31));
 	log_line(LOG_INFO, "EM_DAYOWS: 0b%s (Sun .. Mon)", bitprint(buf, data[11], 7));
 	log_line(LOG_INFO, "EM_HOURS: 0b%s (23 .. 00)", bitprint(buf, data[14] << 16 | data[13] << 8 | data[12], 24));
-	log_line(LOG_INFO, "EM_ONDAY: %04d-%02d-%02d", 2000 + ((data[16] & 0b11111110) >> 1),
-		 ((data[16] << 8 | data[15]) & 0b111100000) >> 5, data[15] & 0b11111);
-	log_line(LOG_INFO, "EM_ONVOL: %d l", (data[18] << 8 | data[17]));
+	log_line(LOG_INFO, "EM_ONDAY: %04d-%02d-%02d (%s)", 2000 + ((data[16] & 0b11111110) >> 1),
+		 ((data[16] << 8 | data[15]) & 0b111100000) >> 5, data[15] & 0b11111,
+		 (data[0] & EM_ENA_STARTDATE) ? "active" : "inactive");
+	log_line(LOG_INFO, "EM_ONVOL: %d l (%s)", (data[18] << 8 | data[17]),
+		 (data[0] & EM_ENA_STARTVOL) ? "active" : "inactive");
 	log_line(LOG_INFO, "EM_OPYEARS: %d", data[19]);
 }
 
