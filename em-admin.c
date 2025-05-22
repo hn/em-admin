@@ -339,7 +339,7 @@ ssize_t mbus_io_acked(int fd, unsigned char *out, const size_t outlen) {
 		return -len;
 	}
 
-	if ((len < 1) && (in[0] != MBUS_FRAME_ACK)) {
+	if ((len < 1) || (in[0] != MBUS_FRAME_ACK)) {
 		log_line(LOG_ERR, "M-Bus protocol error, received %d unprocessable bytes.", len);
 		return EPROTO;
 	}
