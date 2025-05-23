@@ -11,7 +11,12 @@ Use at your own risk.
 
 ## Hardware
 
-An UART adapter with 3mm IR-LED and sensor (2€ in total) is sufficient,
+To connect to the infrared interface of the water meter
+(located on the far left side of the front, clear IR-LED at the top, dark IR-sensor at the bottom),
+you need an “opto head”. These can be bought ready-made for about 30€,
+curiously you can also find offers with a price of 300€.
+
+As a cheap alternative, an UART adapter with 3mm IR-LED and sensor (2€ in total) is sufficient,
 e.g. adapt https://github.com/openv/openv/wiki/ESPHome-Optolink#hardware
 
 ## Usage
