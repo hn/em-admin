@@ -157,10 +157,46 @@ void log_line(int prio, const char *fmt, ...) {
 	va_end(args);
 }
 
-unsigned char *bitprint(unsigned char *data, const unsigned long val, const unsigned int len) {
+char *bitprint(char *data, const unsigned long val, const unsigned int len) {
 	for (unsigned int i = 0; i < len; i++)
 		data[i] = (val & (1 << (len - i - 1))) ? '1' : '0';
 	data[len] = 0;
+	return data;
+}
+
+char *rangeprint(char *data, const unsigned long val, const unsigned int len, const unsigned int mode) {
+	size_t p = 0;
+	unsigned int r = 0;
+	for (int i = len; i >= 0; i--) {
+		if ((i > 0) && (val & (1 << (i - 1)))) {
+			if (r++) continue;
+			if (p) p += sprintf(data + p, ", ");
+		} else {
+			if (r == 1) r = 0;
+			if (!r) continue;
+			p += sprintf(data + p, " - ");
+			r = 0;
+		}
+		unsigned int v = i + !r;
+		struct tm t = { 0 };
+
+		switch (mode) {
+			case 'w':
+				t.tm_wday = v % 7;
+				p += strftime(data + p, 5, "%a", &t);
+				break;
+			case 'm':
+				t.tm_mon = v - 1;
+				p += strftime(data + p, 5, "%b", &t);
+				break;
+			case 'h':
+				p += sprintf(data + p, "%02d", v - 1);
+				break;
+			default:
+				p += sprintf(data + p, "%d", v);
+		}
+	}
+	data[p] = 0;
 	return data;
 }
 
@@ -563,16 +599,23 @@ int em_read_months(int fd) {
 }
 
 void em_dump_settings(const unsigned char *data) {
-	unsigned char buf[32 + 1];
+	char buf[64];
+	char buf2[96];
+	const unsigned int em_months = data[6] << 8 | data[5];
+	const unsigned long em_weekoms = data[10] << 24 | data[9] << 16 | data[8] << 8 | data[7];
+	const unsigned long em_hours = data[14] << 16 | data[13] << 8 | data[12];
+
 	log_line(LOG_INFO, "EM_FLAGS: 0x%02x", data[0]);
 	log_line(LOG_INFO, "EM_OMSMODE: %d", data[1]);
 	log_line(LOG_INFO, "EM_FRAMETYPE: %d", data[2]);
 	log_line(LOG_INFO, "EM_INTERVAL: %d s", (data[4] << 8 | data[3]));
-	log_line(LOG_INFO, "EM_MONTHS: 0b%s (Dec .. Jan)", bitprint(buf, data[6] << 8 | data[5], 12));
-	log_line(LOG_INFO, "EM_WEEKOMS: 0b%s (31 .. 1)",
-		 bitprint(buf, data[10] << 24 | data[9] << 16 | data[8] << 8 | data[7], 31));
-	log_line(LOG_INFO, "EM_DAYOWS: 0b%s (Sun .. Mon)", bitprint(buf, data[11], 7));
-	log_line(LOG_INFO, "EM_HOURS: 0b%s (23 .. 00)", bitprint(buf, data[14] << 16 | data[13] << 8 | data[12], 24));
+	log_line(LOG_INFO, "EM_MONTHS: 0b%s (%s)",
+		bitprint(buf, em_months, 12), rangeprint(buf2, em_months, 12, 'm'));
+	log_line(LOG_INFO, "EM_WEEKOMS: 0b%s (%s)",
+		bitprint(buf, em_weekoms, 31), rangeprint(buf2, em_weekoms, 31, 'd'));
+	log_line(LOG_INFO, "EM_DAYOWS: 0b%s (%s)", bitprint(buf, data[11], 7), rangeprint(buf2, data[11], 7, 'w'));
+	log_line(LOG_INFO, "EM_HOURS: 0b%s (%s)",
+		bitprint(buf, em_hours, 24), rangeprint(buf2, em_hours, 24, 'h'));
 	log_line(LOG_INFO, "EM_ONDAY: %04d-%02d-%02d (%s)", 2000 + ((data[16] & 0b11111110) >> 1),
 		 ((data[16] << 8 | data[15]) & 0b111100000) >> 5, data[15] & 0b11111,
 		 (data[0] & EM_ENA_STARTDATE) ? "active" : "inactive");
