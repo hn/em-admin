@@ -168,7 +168,7 @@ char *rangeprint(char *data, const unsigned long val, const unsigned int len, co
 	size_t p = 0;
 	unsigned int r = 0;
 	for (int i = len; i >= 0; i--) {
-		if ((i > 0) && (val & (1 << (i - 1)))) {
+		if (i && (val & (1 << (i - 1)))) {
 			if (r++) continue;
 			if (p) p += sprintf(data + p, ", ");
 		} else {
@@ -181,19 +181,19 @@ char *rangeprint(char *data, const unsigned long val, const unsigned int len, co
 		struct tm t = { 0 };
 
 		switch (mode) {
-			case 'w':
-				t.tm_wday = v % 7;
-				p += strftime(data + p, 5, "%a", &t);
-				break;
-			case 'm':
-				t.tm_mon = v - 1;
-				p += strftime(data + p, 5, "%b", &t);
-				break;
-			case 'h':
-				p += sprintf(data + p, "%02d", v - 1);
-				break;
-			default:
-				p += sprintf(data + p, "%d", v);
+		case 'w':
+			t.tm_wday = v % 7;
+			p += strftime(data + p, 5, "%a", &t);
+			break;
+		case 'm':
+			t.tm_mon = v - 1;
+			p += strftime(data + p, 5, "%b", &t);
+			break;
+		case 'h':
+			p += sprintf(data + p, "%02d", v - 1);
+			break;
+		default:
+			p += sprintf(data + p, "%d", v);
 		}
 	}
 	data[p] = 0;
@@ -546,10 +546,11 @@ int em_read_highres(int fd) {
 		return EPROTO;
 	}
 
-	log_line(LOG_INFO, "EM_HIGHRES_READING: %ld ml", frame_in[MBUS_FRAME_LONG_HDR_LEN + MBUS_RSPUD12_HDR_LEN +3] << 24 |
-		frame_in[MBUS_FRAME_LONG_HDR_LEN + MBUS_RSPUD12_HDR_LEN + 2] << 16 |
-		frame_in[MBUS_FRAME_LONG_HDR_LEN + MBUS_RSPUD12_HDR_LEN + 1] << 8 |
-		frame_in[MBUS_FRAME_LONG_HDR_LEN + MBUS_RSPUD12_HDR_LEN]);
+	log_line(LOG_INFO, "EM_HIGHRES_READING: %ld ml",
+		 frame_in[MBUS_FRAME_LONG_HDR_LEN + MBUS_RSPUD12_HDR_LEN + 3] << 24 |
+		 frame_in[MBUS_FRAME_LONG_HDR_LEN + MBUS_RSPUD12_HDR_LEN + 2] << 16 |
+		 frame_in[MBUS_FRAME_LONG_HDR_LEN + MBUS_RSPUD12_HDR_LEN + 1] << 8 |
+		 frame_in[MBUS_FRAME_LONG_HDR_LEN + MBUS_RSPUD12_HDR_LEN]);
 
 	log_line(LOG_INFO, "Operation completed successfully");
 	return 0;
@@ -610,12 +611,12 @@ void em_dump_settings(const unsigned char *data) {
 	log_line(LOG_INFO, "EM_FRAMETYPE: %d", data[2]);
 	log_line(LOG_INFO, "EM_INTERVAL: %d s", (data[4] << 8 | data[3]));
 	log_line(LOG_INFO, "EM_MONTHS: 0b%s (%s)",
-		bitprint(buf, em_months, 12), rangeprint(buf2, em_months, 12, 'm'));
+		 bitprint(buf, em_months, 12), rangeprint(buf2, em_months, 12, 'm'));
 	log_line(LOG_INFO, "EM_WEEKOMS: 0b%s (%s)",
-		bitprint(buf, em_weekoms, 31), rangeprint(buf2, em_weekoms, 31, 'd'));
+		 bitprint(buf, em_weekoms, 31), rangeprint(buf2, em_weekoms, 31, 'd'));
 	log_line(LOG_INFO, "EM_DAYOWS: 0b%s (%s)", bitprint(buf, data[11], 7), rangeprint(buf2, data[11], 7, 'w'));
 	log_line(LOG_INFO, "EM_HOURS: 0b%s (%s)",
-		bitprint(buf, em_hours, 24), rangeprint(buf2, em_hours, 24, 'h'));
+		 bitprint(buf, em_hours, 24), rangeprint(buf2, em_hours, 24, 'h'));
 	log_line(LOG_INFO, "EM_ONDAY: %04d-%02d-%02d (%s)", 2000 + ((data[16] & 0b11111110) >> 1),
 		 ((data[16] << 8 | data[15]) & 0b111100000) >> 5, data[15] & 0b11111,
 		 (data[0] & EM_ENA_STARTDATE) ? "active" : "inactive");
