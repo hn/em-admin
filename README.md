@@ -6,7 +6,7 @@ watermeter radio parameters and read various info via infrared M-Bus interface.
 
 This project is in no way affiliated with the above-mentioned vendors.
 
-Tested with water meters from the WaterStar M “M-ETH” “DWZ” series, other models may work.
+Tested with water meters from the WaterStar M “M-ETH” “DWZ02” series, other models may work or not.
 Use at your own risk.
 
 Please do me a favor: :thumbsup: If you use any information or code you find here, please link back to this page.
