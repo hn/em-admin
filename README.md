@@ -4,7 +4,10 @@ Read and write [Engelmann](https://www.engelmann.de/),
 [Lorenz](https://www.lorenz-meters.de/), [Brummerhoop](https://www.brummerhoop.com/)
 watermeter radio parameters and read various info via infrared M-Bus interface.
 
-This project is in no way affiliated with the above-mentioned vendors.
+This is an independent, open-source project and is not affiliated with, endorsed by,
+or sponsored by the above-mentioned vendors or its affiliates.
+All product names and trademarks are the property of their respective owners.
+References to manufacturers' devices are for descriptive purposes only and do not imply any connection to the manufacturers.
 
 Tested with water meters from the WaterStar M “M-ETH” “DWZ02” series, other models may work or not.
 Use at your own risk.
@@ -85,11 +88,12 @@ First of all, use `get_params` and carefully backup the current `EM_*` settings.
 Then change the `SET_EM_*` defines according to your needs,
 recompile and use `set_params`.
 
-:raised_hand: If you set the readout interval too low and also do not limit the hours and days,
-the battery will discharge before the end of the water meter's service life.
-Frequent reading via infrared likewise drains the battery.
-You can use the [Lorenz Web Configuration Tool](https://konfigurator.lorenz-meters.de/) to
-calculate expected battery lifetime ([JS source code](https://konfigurator.lorenz-meters.de/battery.js)).
+> [!WARNING]
+> If you set the readout interval too low and also do not limit the hours and days,
+> the battery will discharge before the end of the water meter's service life.
+> Frequent reading via infrared likewise drains the battery.
+> You can use the [Lorenz Web Configuration Tool](https://konfigurator.lorenz-meters.de/) to
+> calculate expected battery lifetime ([JS source code](https://konfigurator.lorenz-meters.de/battery.js)).
 
 M-Bus timing and protocol parsing has been loosely implemented
 according to the specification and is “works for me” ware.
